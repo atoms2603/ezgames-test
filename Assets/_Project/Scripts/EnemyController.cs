@@ -37,15 +37,16 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isKnocked)
+        if (!GameManager.instance.IsGameStarted) return;
+
+        if (isKnocked || player.GetComponent<PlayerController>().IsKnocked)
         {
             isMoving = false;
             Animator.SetBool("isWalking", isMoving);
             return;
         }
 
-        Animator.SetTrigger("attack");
-        //Movement();
+        Movement();
     }
 
     public void ApplyDamage(int damage)
@@ -66,13 +67,7 @@ public class EnemyController : MonoBehaviour
         var distance = Vector3.Distance(player.position, transform.position);
         if (distance <= attackRange)
         {
-            if (!player.TryGetComponent<PlayerController>(out var playerController)) return;
-
-            if (playerController.IsKnocked) return;
-
-            isMoving = false;
-            Animator.SetBool("isWalking", isMoving);
-            Animator.SetTrigger("attack");
+            TryAttack();
             return;
         }
 
@@ -90,5 +85,16 @@ public class EnemyController : MonoBehaviour
 
         isMoving = true;
         Animator.SetBool("isWalking", isMoving);
+    }
+
+    private void TryAttack()
+    {
+        if (!player.TryGetComponent<PlayerController>(out var playerController)) return;
+
+        isMoving = false;
+        Animator.SetBool("isWalking", isMoving);
+        if (playerController.IsKnocked) return;
+
+        Animator.SetTrigger("attack");
     }
 }
