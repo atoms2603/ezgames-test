@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Mono.Cecil.Cil;
+using Unity.Jobs;
+using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -12,8 +14,14 @@ public class PlayerAttack : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (controller.Movement.IsMoving) return;
+
         if (other == null) return;
+
         if (!other.CompareTag("Enemy")) return;
+
+        if (!other.TryGetComponent<EnemyController>(out var enemy)) return;
+
+        if (enemy.IsKnocked) return;
 
         controller.Animator.SetTrigger("attack");
     }

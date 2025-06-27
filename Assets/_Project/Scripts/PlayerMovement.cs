@@ -12,12 +12,16 @@ public class PlayerMovement : MonoBehaviour
     public bool IsMoving => isMoving;
     private void Start()
     {
-        joystick = FindAnyObjectByType<DynamicJoystick>();
+        joystick = FindAnyObjectByType<DynamicJoystick>(FindObjectsInactive.Include);
         controller = GetComponentInParent<PlayerController>();
     }
 
     private void FixedUpdate()
     {
+        if (!GameManager.instance.IsGameStarted) return;
+
+        if (controller.IsKnocked) return;
+
         if (joystick.Direction.sqrMagnitude > 0.01f)
         {
             ManualMovement();
