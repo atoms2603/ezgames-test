@@ -642,7 +642,7 @@ GameObject:
   - component: {fileID: 3180312312903774751}
   - component: {fileID: 7077755913132639053}
   m_Layer: 0
-  m_Name: Enemy 2
+  m_Name: NPC 2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -672,7 +672,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3191820268066888686}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -731,12 +731,13 @@ MonoBehaviour:
   baseHealth: 5
   health: 0
   damage: 1
+  isKnocked: 0
   speed: 1
   rotateSpeed: 10
   attackRange: 0.5
-  isKnocked: 0
   isMoving: 0
-  player: {fileID: 0}
+  target: {fileID: 0}
+  IsEnemy: 0
 --- !u!1 &3274322871521789979
 GameObject:
   m_ObjectHideFlags: 0

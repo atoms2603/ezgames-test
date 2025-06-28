@@ -10,7 +10,7 @@ public class PlayerAnimationEvent : MonoBehaviour
             if (enemy.CompareTag("Enemy"))
             {
                 Debug.Log("Enemy hit: " + enemy.transform.name);
-                if(enemy.TryGetComponent<EnemyController>(out var controller))
+                if(enemy.TryGetComponent<NPCController>(out var controller))
                 {
                     if (controller.IsKnocked) continue;
                     var playerDamage = transform.GetComponentInParent<PlayerController>();

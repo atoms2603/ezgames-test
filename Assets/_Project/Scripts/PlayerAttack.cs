@@ -19,9 +19,11 @@ public class PlayerAttack : MonoBehaviour
 
         if (!other.CompareTag("Enemy")) return;
 
-        if (!other.TryGetComponent<EnemyController>(out var enemy)) return;
+        if (!other.TryGetComponent<NPCController>(out var enemy)) return;
 
         if (enemy.IsKnocked) return;
+
+        if (!enemy.IsEnemy) return;
 
         controller.Animator.SetTrigger("attack");
     }
