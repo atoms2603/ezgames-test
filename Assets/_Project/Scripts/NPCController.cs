@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class NPCController : BaseController
 
     private void FixedUpdate()
     {
-        if (!GameManager.instance.IsGameStarted) return;
+        if (!GameManager.Instance.IsGameStarted) return;
 
         if (target == null || target.GetComponent<BaseController>().isKnocked)
         {
@@ -90,7 +91,7 @@ public class NPCController : BaseController
 
         if (opponents.Count > 0)
         {
-            target = opponents[Random.Range(0, opponents.Count)].transform;
+            target = opponents[UnityEngine.Random.Range(0, opponents.Count)].transform;
         }
         else if (IsEnemy)
         {

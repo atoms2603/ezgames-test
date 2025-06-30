@@ -11,7 +11,7 @@ public enum GameMode
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance;
 
     public GameMode GameMode;
 
@@ -21,9 +21,9 @@ public class GameManager : MonoBehaviour
     public Action OnGameStart;
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
     }
 
@@ -45,15 +45,34 @@ public class GameManager : MonoBehaviour
         StartCoroutine(StartCountDown());
     }
 
+    public void Back()
+    {
+        UIManager.Instance.ShowEndGamePanel(false);
+        UIManager.Instance.ShowSelectionMode(true);
+    }
+
+    public void Retry()
+    {
+        StartCoroutine(StartCountDown());
+        UIManager.Instance.ShowEndGamePanel(false);
+    }
+
     IEnumerator StartCountDown()
     {
-        UIManager.instance.ShowSelectionMode(false);
+        IsGameStarted = false;
+        UIManager.Instance.ShowSelectionMode(false);
         IsModeSelected = true;
+
+        NPCSpawner spawner = FindAnyObjectByType<NPCSpawner>();
+        if (spawner != null)
+        {
+            spawner.StartSpawn();
+        }
 
         int countDown = 3;
         while (countDown > 0)
         {
-            UIManager.instance.ShowCountDownText(true, countDown.ToString());
+            UIManager.Instance.ShowCountDownText(true, countDown.ToString());
             yield return new WaitForSeconds(1);
             countDown--;
         }

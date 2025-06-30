@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!GameManager.instance.IsGameStarted) return;
+        if (!GameManager.Instance.IsGameStarted) return;
 
         if (controller.IsKnocked) return;
 

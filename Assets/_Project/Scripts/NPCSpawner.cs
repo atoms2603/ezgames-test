@@ -6,7 +6,11 @@ public class NPCSpawner : MonoBehaviour
 {
     [SerializeField] Transform enemySpawnArea;
     [SerializeField] Transform teamSpawnArea;
+    [SerializeField] Transform playerSpawnPoint;
+    [SerializeField] GameObject playerPrefab;
     [SerializeField] List<GameObject> prefabs;
+    [SerializeField] int enemyCount;
+    [SerializeField] int teamCount;
 
     public List<GameObject> EnemySpawned = new();
     public List<GameObject> TeamSpawned = new();
@@ -15,22 +19,48 @@ public class NPCSpawner : MonoBehaviour
     {
         enemySpawnArea = transform.Find("EnemySpawnArea");
         teamSpawnArea = transform.Find("TeamSpawnArea");
+        playerSpawnPoint = transform.Find("PlayerSpawnpoint");
+    }
+
+    public void StartSpawn()
+    {
+        // Clear old enemies
+        foreach (var enemy in EnemySpawned)
+        {
+            enemy.SetActive(false);
+        }
+        EnemySpawned.Clear();
+
+        // Clear old team
+        foreach (var teammate in TeamSpawned)
+        {
+            teammate.SetActive(false);
+        }
+        TeamSpawned.Clear();
+
+        enemyCount = 0; 
+        teamCount = 0;
+
+        ObjectPoolingManager.Instance.ResetPool();
         StartCoroutine(SpawnByMode());
     }
 
-    IEnumerator SpawnByMode()
+    private IEnumerator SpawnByMode()
     {
-        yield return new WaitUntil(() => GameManager.instance.IsModeSelected);
+        yield return new WaitUntil(() => GameManager.Instance.IsModeSelected);
 
-        switch (GameManager.instance.GameMode)
+        switch (GameManager.Instance.GameMode)
         {
             case GameMode.OnevsOne:
+                SpawnPlayer();
                 SpawnEnemy(1);
                 break;
             case GameMode.OnevsMany:
+                SpawnPlayer();
                 SpawnEnemy(3);
                 break;
             case GameMode.ManyvsMany:
+                SpawnPlayer();
                 SpawnEnemy(3);
                 SpawnTeam(2);
                 break;
@@ -43,8 +73,10 @@ public class NPCSpawner : MonoBehaviour
         {
             var spawnPosition = GetEnemySpawnPosition();
             var newEnemy = ObjectPoolingManager.Instance.SpawnObject(prefabs[Random.Range(0, prefabs.Count)], spawnPosition, Quaternion.identity);
-            newEnemy.GetComponent<NPCController>().Init();
+            newEnemy.GetComponent<NPCController>().Init(isEnemy: true);
+            newEnemy.GetComponent<NPCController>().OnDeath += OnEnemyDeathHandler;
             EnemySpawned.Add(newEnemy);
+            enemyCount++;
         }
     }
 
@@ -55,7 +87,36 @@ public class NPCSpawner : MonoBehaviour
             var spawnPosition = GetTeamSpawnPosition();
             var newEnemy = ObjectPoolingManager.Instance.SpawnObject(prefabs[Random.Range(0, prefabs.Count)], spawnPosition, Quaternion.identity);
             newEnemy.GetComponent<NPCController>().Init(isEnemy: false);
+            newEnemy.GetComponent<NPCController>().OnDeath += OnTeamDeathHandler;
             TeamSpawned.Add(newEnemy);
+            teamCount++;
+        }
+    }
+
+    private void SpawnPlayer()
+    {
+        var player = ObjectPoolingManager.Instance.SpawnObject(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
+        player.GetComponent<PlayerController>().Init();
+        player.GetComponent<PlayerController>().OnDeath += OnTeamDeathHandler;
+        TeamSpawned.Add(player);
+        teamCount++;
+    }
+
+    private void OnEnemyDeathHandler()
+    {
+        enemyCount--;
+        if (enemyCount <= 0)
+        {
+            UIManager.Instance.ShowEndGamePanel(true);
+        }
+    }
+
+    private void OnTeamDeathHandler()
+    {
+        teamCount--;
+        if (teamCount <= 0)
+        {
+            UIManager.Instance.ShowEndGamePanel(true);
         }
     }
 

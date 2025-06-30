@@ -11,4 +11,9 @@ public class PlayerController : BaseController
         Movement = GetComponentInChildren<PlayerMovement>();
         Attack = GetComponentInChildren<PlayerAttack>();
     }
+
+    public void Init()
+    {
+        health = baseHealth;
+    }
 }
