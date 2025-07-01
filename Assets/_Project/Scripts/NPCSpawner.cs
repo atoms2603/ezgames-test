@@ -38,7 +38,7 @@ public class NPCSpawner : MonoBehaviour
         }
         TeamSpawned.Clear();
 
-        enemyCount = 0; 
+        enemyCount = 0;
         teamCount = 0;
 
         ObjectPoolingManager.Instance.ResetPool();
@@ -51,6 +51,10 @@ public class NPCSpawner : MonoBehaviour
 
         switch (GameManager.Instance.GameMode)
         {
+            case GameMode.Campaign:
+                SpawnPlayer();
+                SpawnEnemy(GameManager.Instance.currentLevel);
+                break;
             case GameMode.OnevsOne:
                 SpawnPlayer();
                 SpawnEnemy(1);
@@ -63,6 +67,10 @@ public class NPCSpawner : MonoBehaviour
                 SpawnPlayer();
                 SpawnEnemy(3);
                 SpawnTeam(2);
+                break;
+            case GameMode.OneVsAll:
+                SpawnPlayer();
+                SpawnEnemy(50);
                 break;
         }
     }
@@ -105,9 +113,29 @@ public class NPCSpawner : MonoBehaviour
     private void OnEnemyDeathHandler()
     {
         enemyCount--;
-        if (enemyCount <= 0)
+
+        switch (GameManager.Instance.GameMode)
         {
-            UIManager.Instance.ShowEndGamePanel(true);
+            case GameMode.Campaign:
+                if (enemyCount <= 0)
+                {
+                    if (GameManager.Instance.currentLevel >= GameManager.Instance.maxLevel)
+                    {
+                        ResetGame();
+                    }
+                    else
+                    {
+                        GameManager.Instance.currentLevel++;
+                        StartCoroutine(GameManager.Instance.StartNewLevel());
+                    }
+                }
+                break;
+            default:
+                if (enemyCount <= 0)
+                {
+                    ResetGame();
+                }
+                break;
         }
     }
 
@@ -116,8 +144,14 @@ public class NPCSpawner : MonoBehaviour
         teamCount--;
         if (teamCount <= 0)
         {
-            UIManager.Instance.ShowEndGamePanel(true);
+            ResetGame();
         }
+    }
+
+    private void ResetGame()
+    {
+        GameManager.Instance.currentLevel = 1;
+        UIManager.Instance.ShowEndGamePanel(true);
     }
 
     private Vector3 GetEnemySpawnPosition()

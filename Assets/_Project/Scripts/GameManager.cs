@@ -4,9 +4,11 @@ using UnityEngine;
 
 public enum GameMode
 {
+    Campaign,
     OnevsOne,
     OnevsMany,
     ManyvsMany,
+    OneVsAll
 }
 
 public class GameManager : MonoBehaviour
@@ -14,6 +16,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public GameMode GameMode;
+
+    public int currentLevel = 1;
+    public int maxLevel = 10;
 
     public bool IsModeSelected = false;
     public bool IsGameStarted = false;
@@ -27,22 +32,34 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void Start1vs1Mode()
+    public void StartCampaignMode()
     {
-        GameMode = GameMode.OnevsOne;
-        StartCoroutine(StartCountDown());
+        GameMode = GameMode.Campaign;
+        StartCoroutine(StartNewLevel());
     }
 
-    public void Start1vsManyMode()
+    public void StartOnevsOneMode()
+    {
+        GameMode = GameMode.OnevsOne;
+        StartCoroutine(StartNewLevel());
+    }
+
+    public void StartOnevsManyMode()
     {
         GameMode = GameMode.OnevsMany;
-        StartCoroutine(StartCountDown());
+        StartCoroutine(StartNewLevel());
     }
 
     public void StartManyvsManyMode()
     {
         GameMode = GameMode.ManyvsMany;
-        StartCoroutine(StartCountDown());
+        StartCoroutine(StartNewLevel());
+    }
+
+    public void StartOneVsAllMode()
+    {
+        GameMode = GameMode.OneVsAll;
+        StartCoroutine(StartNewLevel());
     }
 
     public void Back()
@@ -53,21 +70,24 @@ public class GameManager : MonoBehaviour
 
     public void Retry()
     {
-        StartCoroutine(StartCountDown());
+        StartCoroutine(StartNewLevel());
         UIManager.Instance.ShowEndGamePanel(false);
     }
 
-    IEnumerator StartCountDown()
+    public IEnumerator StartNewLevel()
     {
         IsGameStarted = false;
         UIManager.Instance.ShowSelectionMode(false);
         IsModeSelected = true;
 
+        UIManager.Instance.ShowCountDownText(true, GetTitle());
         NPCSpawner spawner = FindAnyObjectByType<NPCSpawner>();
         if (spawner != null)
         {
             spawner.StartSpawn();
         }
+
+        yield return new WaitForSeconds(1);
 
         int countDown = 3;
         while (countDown > 0)
@@ -80,4 +100,14 @@ public class GameManager : MonoBehaviour
         IsGameStarted = true;
         OnGameStart?.Invoke();
     }
+
+    private string GetTitle() => GameMode switch
+    {
+        GameMode.Campaign => $"Level {currentLevel}",
+        GameMode.OnevsOne => "1 vs 1",
+        GameMode.OnevsMany => "1 vs Many",
+        GameMode.ManyvsMany => "Many vs Many",
+        GameMode.OneVsAll => "1 vs all (50)",
+        _ => ""
+    };
 }
