@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
 
     public void Back()
     {
+        IsModeSelected = false;
         UIManager.Instance.ShowEndGamePanel(false);
         UIManager.Instance.ShowSelectionMode(true);
     }
@@ -81,13 +82,14 @@ public class GameManager : MonoBehaviour
         IsModeSelected = true;
 
         UIManager.Instance.ShowCountDownText(true, GetTitle());
+
+        yield return new WaitForSeconds(3);
+
         NPCSpawner spawner = FindAnyObjectByType<NPCSpawner>();
         if (spawner != null)
         {
             spawner.StartSpawn();
         }
-
-        yield return new WaitForSeconds(1);
 
         int countDown = 3;
         while (countDown > 0)

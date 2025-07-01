@@ -15,6 +15,7 @@ public class NPCSpawner : MonoBehaviour
     public List<GameObject> EnemySpawned = new();
     public List<GameObject> TeamSpawned = new();
 
+    private bool isHasResult =false;
     private void Start()
     {
         enemySpawnArea = transform.Find("EnemySpawnArea");
@@ -24,6 +25,7 @@ public class NPCSpawner : MonoBehaviour
 
     public void StartSpawn()
     {
+        isHasResult = false;
         // Clear old enemies
         foreach (var enemy in EnemySpawned)
         {
@@ -48,7 +50,7 @@ public class NPCSpawner : MonoBehaviour
     private IEnumerator SpawnByMode()
     {
         yield return new WaitUntil(() => GameManager.Instance.IsModeSelected);
-
+        yield return null;
         switch (GameManager.Instance.GameMode)
         {
             case GameMode.Campaign:
@@ -81,7 +83,7 @@ public class NPCSpawner : MonoBehaviour
         {
             var spawnPosition = GetEnemySpawnPosition();
             var newEnemy = ObjectPoolingManager.Instance.SpawnObject(prefabs[Random.Range(0, prefabs.Count)], spawnPosition, Quaternion.identity);
-            newEnemy.GetComponent<NPCController>().Init(isEnemy: true);
+            newEnemy.GetComponent<NPCController>().Init(isEnemy: true, GameManager.Instance.currentLevel);
             newEnemy.GetComponent<NPCController>().OnDeath += OnEnemyDeathHandler;
             EnemySpawned.Add(newEnemy);
             enemyCount++;
@@ -94,7 +96,7 @@ public class NPCSpawner : MonoBehaviour
         {
             var spawnPosition = GetTeamSpawnPosition();
             var newEnemy = ObjectPoolingManager.Instance.SpawnObject(prefabs[Random.Range(0, prefabs.Count)], spawnPosition, Quaternion.identity);
-            newEnemy.GetComponent<NPCController>().Init(isEnemy: false);
+            newEnemy.GetComponent<NPCController>().Init(isEnemy: false, GameManager.Instance.currentLevel);
             newEnemy.GetComponent<NPCController>().OnDeath += OnTeamDeathHandler;
             TeamSpawned.Add(newEnemy);
             teamCount++;
@@ -104,7 +106,7 @@ public class NPCSpawner : MonoBehaviour
     private void SpawnPlayer()
     {
         var player = ObjectPoolingManager.Instance.SpawnObject(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
-        player.GetComponent<PlayerController>().Init();
+        player.GetComponent<PlayerController>().Init(GameManager.Instance.currentLevel);
         player.GetComponent<PlayerController>().OnDeath += OnTeamDeathHandler;
         TeamSpawned.Add(player);
         teamCount++;
@@ -113,6 +115,8 @@ public class NPCSpawner : MonoBehaviour
     private void OnEnemyDeathHandler()
     {
         enemyCount--;
+
+        if (isHasResult) return;
 
         switch (GameManager.Instance.GameMode)
         {
@@ -125,6 +129,7 @@ public class NPCSpawner : MonoBehaviour
                     }
                     else
                     {
+                        isHasResult = true;
                         GameManager.Instance.currentLevel++;
                         StartCoroutine(GameManager.Instance.StartNewLevel());
                     }
@@ -137,11 +142,15 @@ public class NPCSpawner : MonoBehaviour
                 }
                 break;
         }
+
     }
 
     private void OnTeamDeathHandler()
     {
         teamCount--;
+
+        if (isHasResult) return;
+
         if (teamCount <= 0)
         {
             ResetGame();
@@ -152,6 +161,7 @@ public class NPCSpawner : MonoBehaviour
     {
         GameManager.Instance.currentLevel = 1;
         UIManager.Instance.ShowEndGamePanel(true);
+        isHasResult = true;
     }
 
     private Vector3 GetEnemySpawnPosition()

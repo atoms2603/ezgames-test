@@ -10,22 +10,25 @@ public class NPCController : BaseController
 
     public bool IsEnemy;
 
-    public void Init(bool isEnemy = true)
+    public void Init(bool isEnemy = true, int level = 1)
     {
         IsEnemy = isEnemy;
-        health = baseHealth;
+        health = level == 1 ? baseHealth : Mathf.RoundToInt(baseHealth * level * 0.5f);
     }
 
     private void FixedUpdate()
     {
         if (!GameManager.Instance.IsGameStarted) return;
 
-        if (target == null || target.GetComponent<BaseController>().isKnocked)
+        if (target == null || target.GetComponent<BaseController>().isKnocked || target.gameObject.activeSelf == false)
         {
             FindTarget();
         }
 
-        if (target == null) return;
+        if (target == null)
+        {
+            return;
+        }
 
         if (isKnocked || target.GetComponent<BaseController>().IsKnocked)
         {

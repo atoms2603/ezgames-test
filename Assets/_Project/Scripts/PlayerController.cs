@@ -12,8 +12,8 @@ public class PlayerController : BaseController
         Attack = GetComponentInChildren<PlayerAttack>();
     }
 
-    public void Init()
+    public void Init(int level = 1)
     {
-        health = baseHealth;
+        health = baseHealth * level;
     }
 }

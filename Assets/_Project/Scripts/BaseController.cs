@@ -22,12 +22,12 @@ public class BaseController : MonoBehaviour
     public bool IsKnocked => isKnocked;
 
     public event Action OnDeath;
+
     protected virtual void Start()
     {
         Rigidbody = GetComponent<Rigidbody>();
         Collider = GetComponent<Collider>();
         Animator = GetComponentInChildren<Animator>();
-        health = baseHealth;
     }
 
     protected virtual void OnEnable()
