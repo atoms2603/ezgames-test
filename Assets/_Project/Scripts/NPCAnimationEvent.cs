@@ -16,11 +16,11 @@ public class NPCAnimationEvent : MonoBehaviour
         {
             if (!enemy.TryGetComponent<BaseController>(out var target)) continue;
 
-            if (target.IsKnocked || target == selfController) continue;
+            if (target.isKnocked || target == selfController || target.gameObject.activeSelf == false) continue;
 
             if (target is PlayerController player)
             {
-                player.ApplyDamage(selfController.Damage);
+                player.ApplyDamage(selfController.damage);
                 continue;
             }
 
@@ -29,7 +29,7 @@ public class NPCAnimationEvent : MonoBehaviour
             {
                 if (npcTarget.IsEnemy != isEnemy)
                 {
-                    npcTarget.ApplyDamage(selfController.Damage);
+                    npcTarget.ApplyDamage(selfController.damage);
                 }
             }
         }

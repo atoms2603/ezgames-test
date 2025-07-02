@@ -12,9 +12,9 @@ public class PlayerAnimationEvent : MonoBehaviour
                 Debug.Log("Enemy hit: " + enemy.transform.name);
                 if(enemy.TryGetComponent<NPCController>(out var controller))
                 {
-                    if (controller.IsKnocked) continue;
+                    if (controller.isKnocked) continue;
                     var playerDamage = transform.GetComponentInParent<PlayerController>();
-                    controller.ApplyDamage(playerDamage.Damage);
+                    controller.ApplyDamage(playerDamage.damage);
                 }
             }
         }

@@ -1,0 +1,2 @@
+D:\Work\Tran-Duong-Huy_IB-Fight-Scene\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+D:\Work\Tran-Duong-Huy_IB-Fight-Scene\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt

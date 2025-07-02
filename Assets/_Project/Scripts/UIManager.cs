@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private DynamicJoystick joystick;
     [SerializeField] private GameObject modeSelectPanel;
     [SerializeField] private GameObject endGamePanel;
+    [SerializeField] private GameObject howToPlay;
     [SerializeField] private TextMeshProUGUI CountDownText;
 
     private void Awake()
@@ -23,6 +24,9 @@ public class UIManager : MonoBehaviour
 
         joystick = FindAnyObjectByType<DynamicJoystick>(FindObjectsInactive.Include);
         joystick.gameObject.SetActive(false);
+
+        howToPlay = canvas.transform.Find("HowToPlay").gameObject;
+        howToPlay.SetActive(false);
 
         CountDownText = canvas.transform.Find("CountDownText").GetComponent<TextMeshProUGUI>();
         CountDownText.gameObject.SetActive(false);
@@ -53,6 +57,7 @@ public class UIManager : MonoBehaviour
     {
         if (endGamePanel == null) return;
         endGamePanel.gameObject.SetActive(isShow);
+        DisableGameplayUI();
     }
 
     private void ShowGameplayUI()
@@ -60,6 +65,29 @@ public class UIManager : MonoBehaviour
         if (joystick != null)
         {
             joystick.gameObject.SetActive(true);
+        }
+
+        if (howToPlay != null)
+        {
+            howToPlay.SetActive(true);
+        }
+
+        if (CountDownText != null && CountDownText.gameObject.activeSelf)
+        {
+            CountDownText.gameObject.SetActive(false);
+        }
+    }
+
+    private void DisableGameplayUI()
+    {
+        if (joystick != null)
+        {
+            joystick.gameObject.SetActive(false);
+        }
+
+        if (howToPlay != null)
+        {
+            howToPlay.SetActive(false);
         }
 
         if (CountDownText != null && CountDownText.gameObject.activeSelf)

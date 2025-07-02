@@ -106,7 +106,7 @@ public class NPCSpawner : MonoBehaviour
     private void SpawnPlayer()
     {
         var player = ObjectPoolingManager.Instance.SpawnObject(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
-        player.GetComponent<PlayerController>().Init(GameManager.Instance.currentLevel);
+        player.GetComponent<PlayerController>().Init(level: GameManager.Instance.currentLevel);
         player.GetComponent<PlayerController>().OnDeath += OnTeamDeathHandler;
         TeamSpawned.Add(player);
         teamCount++;

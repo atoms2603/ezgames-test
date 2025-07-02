@@ -1,0 +1,10 @@
+# ninja log v5
+29	1505	7731526502691342	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	443e4c5eb813b819
+17	1523	7731526502881689	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	8b35702553fbbfa3
+7	1613	7731526503651437	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	6ad8530b26167756
+42	1652	7731526504174195	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9c6ec39502dd5970
+0	1695	7731526504576651	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c46bcd89f9bda046
+23	1903	7731526506678296	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	de25a796cefb84e2
+35	1916	7731526506824095	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	4f373deb8355f64
+11	1992	7731526507545557	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	16db4c10de64de8e
+1993	2094	7731526508608781	D:/Work/Tran-Duong-Huy_IB-Fight-Scene/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/6h194t24/obj/arm64-v8a/libgame.so	6874237c60e5dafe

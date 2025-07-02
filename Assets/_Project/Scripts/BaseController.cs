@@ -1,25 +1,28 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseController : MonoBehaviour
 {
+    [Header("References")]
     public Animator Animator;
     public Collider Collider;
     public Rigidbody Rigidbody;
+    public Image HealthImage;
 
     [Header("Stats")]
     public int baseHealth = 5;
     public int health;
     public int damage = 1;
+    public int baseDamage = 1;
     public bool isKnocked = false;
-    public int speed = 1;
+    public float speed = 1f;
+    public float baseSpeed = 2f;
+    public float maxSpeed = 5f;
     public int rotateSpeed = 10;
-    public float attackRange = 1f;
+    public float attackRange = 0.5f;
     public bool isMoving = false;
-
-    public int Damage => damage;
-    public bool IsKnocked => isKnocked;
 
     public event Action OnDeath;
 
@@ -28,6 +31,7 @@ public class BaseController : MonoBehaviour
         Rigidbody = GetComponent<Rigidbody>();
         Collider = GetComponent<Collider>();
         Animator = GetComponentInChildren<Animator>();
+        HealthImage = transform.Find("HealthCanvas").GetComponentInChildren<Image>();
     }
 
     protected virtual void OnEnable()
@@ -43,16 +47,23 @@ public class BaseController : MonoBehaviour
         }
     }
 
+    public virtual void Init(bool isEnemy = true, int level = 1)
+    {
+
+    }
+
     public virtual void ApplyDamage(int damage)
     {
         Animator.SetTrigger("hit");
+
         health -= damage;
         if (health <= 0)
         {
             health = 0;
-
             StartCoroutine(KnockedOut());
         }
+
+        HealthImage.fillAmount = Mathf.Clamp01((float)health / baseHealth);
     }
 
     private void TriggerOnDeathEvent()

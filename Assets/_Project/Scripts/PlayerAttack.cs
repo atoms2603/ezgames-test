@@ -1,6 +1,4 @@
-﻿using Mono.Cecil.Cil;
-using Unity.Jobs;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -21,7 +19,7 @@ public class PlayerAttack : MonoBehaviour
 
         if (!other.TryGetComponent<NPCController>(out var enemy)) return;
 
-        if (enemy.IsKnocked) return;
+        if (enemy.isKnocked) return;
 
         if (!enemy.IsEnemy) return;
 

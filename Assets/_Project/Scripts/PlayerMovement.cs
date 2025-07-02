@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private DynamicJoystick joystick;
-    [SerializeField] private float speed = 1f;
     [SerializeField] private float rotateSpeed = 10f;
 
     private PlayerController controller;
@@ -20,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!GameManager.Instance.IsGameStarted) return;
 
-        if (controller.IsKnocked) return;
+        if (controller.isKnocked) return;
 
         if (joystick.Direction.sqrMagnitude > 0.01f)
         {
@@ -39,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 inputDirection = joystick.Direction.normalized;
         Vector3 moveDirection = new Vector3(inputDirection.x, 0f, inputDirection.y);
 
-        controller.Rigidbody.linearVelocity = moveDirection * speed;
+        controller.Rigidbody.linearVelocity = moveDirection * controller.speed;
 
         Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
         transform.parent.rotation = Quaternion.Slerp(transform.parent.rotation, toRotation, rotateSpeed * Time.fixedDeltaTime);
